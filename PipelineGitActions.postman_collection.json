@@ -1,0 +1,1324 @@
+{
+	"info": {
+		"_postman_id": "a4f91627-e8d8-4679-9d5d-ab7da078dac6",
+		"name": "PipelineGitActions",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26506219",
+		"_collection_link": "https://galactic-water-287137.postman.co/workspace/A_Super_Maquina_Company~b1b04aaf-50c8-4a7d-96c0-33d1e4f444a7/collection/26506219-a4f91627-e8d8-4679-9d5d-ab7da078dac6?action=share&source=collection_link&creator=26506219"
+	},
+	"item": [
+		{
+			"name": "00-auth-token-admin",
+			"item": [
+				{
+					"name": "auth_admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"Token\",pm.variables.replaceIn(JSON.parse(responseBody).token));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mail\": \"sysadmin@qacoders.com\",\r\n    \"password\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "01-user",
+			"item": [
+				{
+					"name": "registerUserAdmin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"name\", pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+									"\r",
+									"pm.environment.set('lastName', pm.variables.replaceIn('{{$randomLastName}}'));\r",
+									"\r",
+									"pm.environment.set('cpf', pm.variables.replaceIn('{{$randomBankAccount}}' + '546'));\r",
+									"\r",
+									"const pass = pm.variables.replaceIn('{{$randomPassword}}');\r",
+									"\r",
+									"const subPass = pass.substring(0, 12);\r",
+									"\r",
+									"pm.environment.set('password', subPass);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"idUser\",pm.variables.replaceIn(JSON.parse(responseBody).user._id));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{name}} {{lastName}}\",\r\n    \"mail\": \"{{name}}{{lastName}}@teste.com\",\r\n    \"password\": \"1234@Test\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": {{cpf}},\r\n    \"confirmPassword\": \"1234@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "02-company",
+			"item": [
+				{
+					"name": "listarCompany",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"let countCompany = 0;\r",
+									"\r",
+									"if (countCompany != 0){\r",
+									"    pm.test(`Validar quantidade de registros ${countCompany}` , function (){\r",
+									"        pm.expect(countCompany).to.gte(Object.keys(pm.response.json()).length)\r",
+									"    })\r",
+									"} else {\r",
+									"    pm.test('Não foi encontrado nenhum registro.', function (){\r",
+									"        pm.expect(null).to.eql(null)\r",
+									"    })\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/company",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listarCompanyId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(200)\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({\r",
+									"      url:  \"https://a-super-maquina.qacoders-academy.com.br/api/company\",\r",
+									"      method: 'GET',\r",
+									"      header: {\r",
+									"        'Accept': 'application/json',\r",
+									"        'Authorization': pm.environment.get('Token')\r",
+									"      },\r",
+									"      body: {}\r",
+									"  }, function (err, res) {\r",
+									"    var lista = []\r",
+									"    var data = res.json();\r",
+									"    for (let i = 0; i < data.length; i++) {\r",
+									"        var push_list = lista.push(data[i]._id)\r",
+									"}    \r",
+									"    function RandomUser() {\r",
+									"        randomUser = lista [Math.floor(Math.random() * lista.length)]\r",
+									"        getIndex = lista.indexOf(randomUser)\r",
+									"        return getIndex\r",
+									"}\r",
+									"    let indexUser = RandomUser()\r",
+									"   \r",
+									"    pm.environment.set(\"GetIdCompany\", lista[indexUser])\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/company/{{GetIdCompany}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"company",
+								"{{GetIdCompany}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "countCompany",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"countCompany\", pm.variables.replaceIn(JSON.parse(responseBody).count))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/company/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"company",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Endereco",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// pm.environment.set(\"countCompany\", pm.variables.replaceIn(JSON.parse(responseBody).count))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"50\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/company/address/{{GetIdCompany}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"company",
+								"address",
+								"{{GetIdCompany}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "03-board",
+			"item": [
+				{
+					"name": "pesqDiretoria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(200)\r",
+									"});\r",
+									"\r",
+									"let countBoard = pm.response.json().count();\r",
+									"\r",
+									"if (countBoard != 0){\r",
+									"    pm.test(`Validar quantidade de registros ${countBoard}` , function (){\r",
+									"        pm.expect(countBoard).to.gte(Object.keys(pm.response.json()).length)\r",
+									"    })\r",
+									"} else {\r",
+									"    pm.test('Não foi encontrado nenhum registro.', function (){\r",
+									"        pm.expect(null).to.eql(null)\r",
+									"    })\r",
+									"};\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/board",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"board"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listarDiretoriaId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//pm.test(\"Status code is 200\", () => {\r",
+									"//  pm.expect(pm.response.code).to.eql(200)\r",
+									"//});\r",
+									"\r",
+									" pm.test(\"Validar paginação limite de 20\", function (){\r",
+									"    pm.expect(20).to.gte(Object.keys(pm.response.json()).length)\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.sendRequest({\r",
+									"      url:  \"https://a-super-maquina.qacoders-academy.com.br/api/board\",\r",
+									"      method: 'GET',\r",
+									"      header: {\r",
+									"        'Accept': 'application/json',\r",
+									"        'Authorization': pm.environment.get('Token')\r",
+									"      },\r",
+									"      body: {}\r",
+									"  }, function (err, res) {\r",
+									"    var lista = []\r",
+									"    var data = res.json();\r",
+									"    for (let i = 0; i < data.length; i++) {\r",
+									"        var push_list = lista.push(data[i]._id)\r",
+									"}    \r",
+									"    function RandomUser() {\r",
+									"        randomUser = lista [Math.floor(Math.random() * lista.length)]\r",
+									"        getIndex = lista.indexOf(randomUser)\r",
+									"        return getIndex\r",
+									"}\r",
+									"    let indexUser = RandomUser()\r",
+									"   \r",
+									"    pm.environment.set(\"GetIdDiretoria\", lista[indexUser])\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/board/{{GetIdDiretoria}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"board",
+								"{{GetIdDiretoria}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incluirDiretoria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(201)\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"Diretoria\", pm.variables.replaceIn('{{$randomJobTitle}}'))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"boardName\": \"{{Diretoria}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/board",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"board"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editarDiretoria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(200)\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"Diretoria\", pm.variables.replaceIn('{{$randomJobTitle}}'))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"boardName\": \"{{Diretoria}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/board/{{GetIdDiretoria}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"board",
+								"{{GetIdDiretoria}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "04-costCenter",
+			"item": [
+				{
+					"name": "centroDeCusto",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"centroCusto\", pm.variables.replaceIn('{{$randomJobTitle}}'))\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"GetIdCostCenter\", pm.variables.replaceIn(JSON.parse(responseBody).newCostCenter?._id));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"costCenterName\": \"{{centroCusto}}\",\r\n\r\n    \"boardId\": \"{{GetIdDiretoria}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/costCenter",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"costCenter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listaDeCentros",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"const costCenter = new Array(pm.response.json()[0].costCenterName)\r",
+									"\r",
+									"const msg = costCenter;\r",
+									"\r",
+									"pm.test(\"Texto esperado: \" + msg, () => {\r",
+									"  pm.expect(pm.response.json().msg)\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/costCenter?costCenterName=Treinamento",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"costCenter"
+							],
+							"query": [
+								{
+									"key": "costCenterName",
+									"value": "Treinamento"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listaDeCentros ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// const costCenterNa = pm.response.json().msg;\r",
+									"\r",
+									"\r",
+									"// pm.test(\"Texto esperado: \" + `\"${msg}\"`, () => {\r",
+									"//   pm.expect(pm.response.json().msg).to.eql(msg)\r",
+									"// });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/costCenter/{{GetIdCostCenter}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"costCenter",
+								"{{GetIdCostCenter}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "05-department",
+			"item": [
+				{
+					"name": "departamento",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"department\", pm.variables.replaceIn('{{$randomJobTitle}}'))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"departmentName\" : \"{{department}}\",\r\n    \"costCenterId\": \"{{GetIdCostCenter}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/department",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"department"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listarDepartamento",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"let listDepartment = pm.response.json().count();\r",
+									"\r",
+									"if (listDepartment != 0){\r",
+									"    pm.test(`Validar quantidade de registros ${listDepartment}` , function (){\r",
+									"        pm.expect(listDepartment).to.gte(Object.keys(pm.response.json()).length)\r",
+									"    })\r",
+									"} else {\r",
+									"    pm.test('Não foi encontrado nenhum registro.', function (){\r",
+									"        pm.expect(null).to.eql(null)\r",
+									"    })\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// pm.sendRequest({\r",
+									"//       url:  \"https://a-super-maquina.qacoders-academy.com.br/api/costCenter\",\r",
+									"//       method: 'GET',\r",
+									"//       header: {\r",
+									"//         'Accept': 'application/json',\r",
+									"//         'Authorization': pm.environment.get('Token')\r",
+									"//       },\r",
+									"//       body: {}\r",
+									"//   }, function (err, res) {\r",
+									"//     var lista = []\r",
+									"//     var data = res.json();\r",
+									"//     for (let i = 0; i < data.length; i++) {\r",
+									"//         var push_list = lista.push(data[i]._id)\r",
+									"// }    \r",
+									"//     function RandomUser() {\r",
+									"//         randomUser = lista [Math.floor(Math.random() * lista.length)]\r",
+									"//         getIndex = lista.indexOf(randomUser)\r",
+									"//         return getIndex\r",
+									"// }\r",
+									"//     let indexUser = RandomUser()\r",
+									"   \r",
+									"//     pm.environment.set(\"GetIdCostCenter\", lista[indexUser])\r",
+									"// });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/department",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"department"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "listarDepartamentCount",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/department/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"department",
+								"count"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "99-delete",
+			"item": [
+				{
+					"name": "deleteIdUserAdmin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/{{idUser}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"{{idUser}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
