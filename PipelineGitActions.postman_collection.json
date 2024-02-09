@@ -17,7 +17,24 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.environment.set(\"Token\",pm.variables.replaceIn(JSON.parse(responseBody).token));"
+									"pm.environment.set(\"Token\",pm.variables.replaceIn(JSON.parse(responseBody).token));\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(200)\r",
+									"});\r",
+									"\r",
+									"pm.test(`${pm.response.json().msg}`, () => {\r",
+									"    (pm.expect(pm.response.json().msg).to.eql(pm.response.json().msg))\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -98,7 +115,13 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.environment.set(\"idUser\",pm.variables.replaceIn(JSON.parse(responseBody).user._id));"
+									"pm.environment.set(\"idUser\",pm.variables.replaceIn(JSON.parse(responseBody).user._id));\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(201)\r",
+									"});\r",
+									"\r",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -371,7 +394,18 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.environment.set(\"countCompany\", pm.variables.replaceIn(JSON.parse(responseBody).count))"
+									"pm.environment.set(\"countCompany\", pm.variables.replaceIn(JSON.parse(responseBody).count))\r",
+									"\r",
+									"console.log(pm.response.json().count)\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(`Quantidade de Registro: ${pm.response.json().count}`, () => {\r",
+									"    (pm.expect(pm.response.json().count).to.eql(pm.response.json().count))\r",
+									"})"
 								],
 								"type": "text/javascript"
 							}
@@ -441,7 +475,15 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// pm.environment.set(\"countCompany\", pm.variables.replaceIn(JSON.parse(responseBody).count))"
+									"// pm.environment.set(\"countCompany\", pm.variables.replaceIn(JSON.parse(responseBody).count))\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(201)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Endereço da companhia atualizado com sucesso.\", () => {\r",
+									"    (pm.expect(pm.response.json().msg).to.eql(pm.response.json().msg))\r",
+									"})"
 								],
 								"type": "text/javascript"
 							}
@@ -472,7 +514,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"50\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"raw": "{\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"55\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -693,7 +735,9 @@
 									"  pm.expect(pm.response.code).to.eql(201)\r",
 									"});\r",
 									"\r",
-									""
+									"pm.test(`${pm.response.json().msg}`, () => {\r",
+									"    (pm.expect(pm.response.json().msg).to.eql(pm.response.json().msg))\r",
+									"})"
 								],
 								"type": "text/javascript"
 							}
@@ -763,7 +807,9 @@
 									"  pm.expect(pm.response.code).to.eql(200)\r",
 									"});\r",
 									"\r",
-									""
+									"pm.test(`${pm.response.json().msg}`, () => {\r",
+									"    (pm.expect(pm.response.json().msg).to.eql(pm.response.json().msg))\r",
+									"})"
 								],
 								"type": "text/javascript"
 							}
@@ -847,7 +893,15 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.environment.set(\"GetIdCostCenter\", pm.variables.replaceIn(JSON.parse(responseBody).newCostCenter?._id));"
+									"pm.environment.set(\"GetIdCostCenter\", pm.variables.replaceIn(JSON.parse(responseBody).newCostCenter?._id));\r",
+									"\r",
+									"pm.test(\"Status code is 201\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(201)\r",
+									"});\r",
+									"\r",
+									"pm.test(`${pm.response.json().msg}`, () => {\r",
+									"    (pm.expect(pm.response.json().msg).to.eql(pm.response.json().msg))\r",
+									"})"
 								],
 								"type": "text/javascript"
 							}
@@ -980,13 +1034,14 @@
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"\r",
+									"// console.log(pm.response.json().costCenter._id)\r",
 									"// const costCenterNa = pm.response.json().msg;\r",
 									"\r",
+									"pm.test(`${pm.response.json().msg}`, () => {\r",
+									"    (pm.expect(pm.response.json().msg).to.eql(pm.response.json().msg))\r",
+									"})\r",
 									"\r",
-									"// pm.test(\"Texto esperado: \" + `\"${msg}\"`, () => {\r",
-									"//   pm.expect(pm.response.json().msg).to.eql(msg)\r",
-									"// });"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -1049,7 +1104,13 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"pm.test(\"Status code is 201\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(201)\r",
+									"});\r",
+									"\r",
+									"pm.test(`${pm.response.json().msg}`, () => {\r",
+									"    (pm.expect(pm.response.json().msg).to.eql(pm.response.json().msg))\r",
+									"})"
 								],
 								"type": "text/javascript"
 							}
@@ -1216,6 +1277,24 @@
 				},
 				{
 					"name": "listarDepartamentCount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(200)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(`Quantidade de Registro: ${pm.response.json().count}`, () => {\r",
+									"    (pm.expect(pm.response.json().count).to.eql(pm.response.json().count))\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1276,6 +1355,32 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let result = pm.test(\"Status code is 200\", () => {\r",
+									"  pm.expect(pm.response.code).to.eql(200)\r",
+									"});\r",
+									"\r",
+									"const deleteAdmin = pm.response.json().msg\r",
+									"\r",
+									"const msg = deleteAdmin;\r",
+									"\r",
+									"if(result) {\r",
+									"    pm.test(\"Texto esperado: \" + msg, () => {\r",
+									"        pm.expect(pm.response.json().deleteAdmin)\r",
+									"    })\r",
+									"} else {\r",
+									"    pm.test(\"Texto esperado: \" + msg, () => {\r",
+									"        pm.expect(pm.response.json().deleteAdmin)\r",
+									"    })\r",
+									"}\r",
 									""
 								],
 								"type": "text/javascript"
